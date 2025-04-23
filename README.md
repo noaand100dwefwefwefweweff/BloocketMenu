@@ -13,6 +13,8 @@ F = When you press f the auto answer will be applied so you dont have to open th
 
 P = Panic button, This will completely shut down the cheat and make it unusable even if you press e one billion times. Good if someone rats you out and the teacher comes up to you.
 
+H = shortcut for highlight command.
+
 More commands coming!
 
 
