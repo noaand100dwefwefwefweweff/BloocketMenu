@@ -16,4 +16,4 @@ P = Panic button, This will completely shut down the cheat and make it unusable 
 More commands coming!
 
 
-Add my discord for any help #pepsi.warrior or join my discord server https://discord.gg/UhxUPDpVqT
+Add my discord #pepsi.warrior or join my discord server https://discord.gg/UhxUPDpVqT for any help or suggestions!
