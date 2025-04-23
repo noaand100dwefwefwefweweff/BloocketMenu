@@ -547,6 +547,99 @@ details summary ~ * {
                 cheatDiv.appendChild(document.createElement('br'));
             })
         };
+        // Smart chest picker and leaderboard-based swap if autoAnswer is on
+        if (autoAnswer && curPage === 'gold') {
+            try {
+                let stateNode = reactHandler().stateNode;
+                if (stateNode.state.stage === 'prize') {
+                    let { choices } = stateNode.state;
+                    let chestContainer = document.querySelector("div[class*='regularBody']")?.children[1];
+                    if (chestContainer && chestContainer.children.length === 3 && !chestContainer.querySelector('.picked-by-script')) {
+                        let pickIndex = -1;
+
+                        // Prefer triple, then double, then any gold
+                        for (let i = 0; i < choices.length; i++) {
+                            let text = choices[i].text.toLowerCase();
+                            if (text.includes("triple gold")) { pickIndex = i; break; }
+                            if (text.includes("double gold")) { pickIndex = i; }
+                        }
+
+                        if (pickIndex === -1) {
+                            pickIndex = choices.findIndex(c => c.text.toLowerCase().includes("gold"));
+                        }
+
+                        // If no gold chest, look for swap and use leaderboard logic
+                        if (pickIndex === -1) {
+                            let swapIndex = choices.findIndex(c => c.text.toLowerCase().includes("swap"));
+                            if (swapIndex !== -1) {
+                                let leaderboard = reactHandler().props.client.leaderboard;
+                                let topPlayer = leaderboard[0]?.name;
+                                let topGold = leaderboard[0]?.gold;
+
+                                if (topPlayer && topPlayer !== reactHandler().props.client.name) {
+                                    let takeAmount = Math.floor(topGold * 0.2);  // First take 20%
+                                    reactHandler().props.firebase.setVal({
+                                        id: reactHandler().props.client.hostId,
+                                        path: "c/" + reactHandler().props.client.name,
+                                        val: {
+                                            b: reactHandler().props.client.blook,
+                                            g: stateNode.state.gold,
+                                            tat: topPlayer + ":swap:" + takeAmount
+                                        }
+                                    });
+
+                                    // Chain: take additional 10%
+                                    setTimeout(() => {
+                                        let more = Math.floor(topGold * 0.1);
+                                        reactHandler().props.firebase.setVal({
+                                            id: reactHandler().props.client.hostId,
+                                            path: "c/" + reactHandler().props.client.name,
+                                            val: {
+                                                b: reactHandler().props.client.blook,
+                                                g: stateNode.state.gold,
+                                                tat: topPlayer + ":swap:" + more
+                                            }
+                                        });
+                                    }, 1000);
+
+                                    pickIndex = swapIndex;
+                                }
+                            }
+                        }
+
+                        // Final action
+                        if (pickIndex !== -1 && chestContainer.children[pickIndex]) {
+                            chestContainer.children[pickIndex].classList.add('picked-by-script');
+                            chestContainer.children[pickIndex].click();
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Leaderboard-based chest selection error:", e);
+            }
+        }
+
+        // Auto-dismiss "Click anywhere to continue" overlay if autoAnswer is on
+        if (autoAnswer && curPage === 'gold') {
+            try {
+                let elements = Array.from(document.querySelectorAll('div'));
+                elements.forEach(el => {
+                    if (el.innerText?.toLowerCase().includes("click anywhere") && el.offsetParent !== null) {
+                        let clickable = document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2);
+                        if (clickable) {
+                            clickable.dispatchEvent(new MouseEvent('click', {
+                                bubbles: true,
+                                cancelable: true,
+                                view: window
+                            }));
+                        }
+                    }
+                });
+            } catch (e) {
+                console.error("Auto-dismiss click screen error:", e);
+            }
+        }
+
         let activeCheatsText = (`Auto Answer: ${autoAnswer ? 'Enabled' : 'Disabled'}\nHighlight Answers: ${highlightAnswers ? 'Enabled' : 'Disabled'}${curPage == 'kingdom' ? `\nChoice ESP: ${choiceESP ? 'Enabled' : 'Disabled'}` : curPage == 'crypto' ? `\nAuto Hack: ${autoPassword ? 'Enabled' : 'Disabled'}` : curPage == 'gold' ? `\nChest ESP: ${chestESP ? 'Enabled' : 'Disabled'}` : ''}`);
         activeCheats.innerText != activeCheatsText && (activeCheats.innerText = activeCheatsText);
         if (autoAnswer) {
