@@ -163,7 +163,7 @@ details summary ~ * {
     bodyDiv.appendChild(footer);
     footer.style.fontSize = '0.9rem';
     footer.style.paddingBottom = '5px';
-    footer.innerHTML = (`<span>GUI by NoahAK47<br>Cheats by <a style="color: red" href="https://www.youtube.com/watch?v=3qi4OaOKyZI">CLICK ME!</a></span>`);
+    footer.innerHTML = (`<span>Cheats by Noah AK47<br>secert 🤫 <a style="color: red" href="https://www.youtube.com/watch?v=3qi4OaOKyZI">CLICK ME!</a></span>`);
 
     var getValues = () => new Promise((e, t) => {
         try {
