@@ -8,45 +8,57 @@
 })();
 (() => {
     let style = document.createElement('style');
-    style.innerHTML = (`details > summary {
+    style.innerHTML = (`
+details > summary {
     cursor: pointer;
-    transition: 0.15s;
+    transition: 0.3s ease;
     list-style: none;
+    padding: 10px;
+    font-weight: 600;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    margin: 5px 0;
+    color: #1b3f78;
 }
 details > summary:hover {
-    color: hsl(0, 0%, 50%)
+    background-color: rgba(255, 255, 255, 0.25);
 }
 details > summary::-webkit-details-marker {
     display: none;
 }
 details summary ~ * {
-    animation: sweep .5s ease-in-out;
+    animation: sweep 0.3s ease-in-out;
 }
 
 @keyframes sweep {
-    0%    {opacity: 0; transform: translateY(-10px)}
+    0%    {opacity: 0; transform: translateY(-5px)}
     100%  {opacity: 1; transform: translateY(0)}
 }
 .cheat {
     border: none;
-    background: hsl(0, 0%, 20%);
-    padding: 5px;
-    margin: 3px;
-    width: 60%;
-    color: hsl(0, 0%, 100%);
-    transition: 0.2s;
-    border-radius: 5px;
+    background: white;
+    padding: 10px 15px;
+    margin: 5px auto;
+    width: 80%;
+    color: #1b3f78;
+    font-size: 14px;
+    border-radius: 8px;
     cursor: pointer;
+    display: block;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: background 0.2s ease, color 0.2s ease;
 }
 .cheat:hover {
-    background: hsl(0, 0%, 30%);
-}`);
+    background: #f0f0f0;
+    color: #0e2a50;
+}
+`);
 
     const GUI = document.createElement('div');
     GUI.appendChild(style);
     GUI.style.width = '400px';
     //GUI.style.height = '500px';
-    GUI.style.background = 'hsl(0, 0%, 10%)';
+    GUI.style.background = 'rgba(173, 216, 230, 0.95)';
     GUI.style.borderRadius = '10px';
     GUI.style.position = 'absolute';
     GUI.style.textAlign = 'center';
@@ -84,13 +96,13 @@ details summary ~ * {
     header.style.paddingTop = '2px';
     header.style.fontSize = '1.5rem';
     header.style.textAlign = 'center'
-    header.innerHTML = `Cum Balls <span style="font-size: 0.75rem">v4.10.22</span>`;
+    header.innerHTML = `Cum Balls <span style="font-size: 0.75rem">(‿ˠ‿)</span>`;
 
     let loop;
 
     let close = document.createElement('button');
     header.appendChild(close);
-    close.style.background = 'red';
+    close.style.background = 'rgba(173, 216, 230, 0.95)';
     close.style.height = '45px';
     close.style.width = '45px';
     close.style.border = 'none';
@@ -113,7 +125,7 @@ details summary ~ * {
 
     let minimize = document.createElement('button');
     header.appendChild(minimize);
-    minimize.style.background = '#444444';
+    minimize.style.background = 'rgba(173, 216, 230, 0.95)';
     minimize.style.height = '45px';
     minimize.style.width = '45px';
     minimize.style.border = 'none';
@@ -151,7 +163,7 @@ details summary ~ * {
     bodyDiv.appendChild(footer);
     footer.style.fontSize = '0.9rem';
     footer.style.paddingBottom = '5px';
-    footer.innerHTML = (`<span>GUI by NoahAK47<br>Cheats by <a style="color: lightblue" href="https://www.youtube.com/watch?v=3qi4OaOKyZI">noah_ak</a></span>`);
+    footer.innerHTML = (`<span>GUI by NoahAK47<br>Cheats by <a style="color: red" href="https://www.youtube.com/watch?v=3qi4OaOKyZI">CLICK ME!</a></span>`);
 
     var getValues = () => new Promise((e, t) => {
         try {
@@ -179,7 +191,7 @@ details summary ~ * {
     }
 
     let autoAnswer, highlightAnswers, choiceESP, autoPassword, chestESP; 
-let autoAnswerDelay = 0;
+
     let cheats = {
         global: {
             'Get Daily Rewards': () => {
@@ -682,50 +694,6 @@ function toggleAutoAnswer(e) {
 }
 addEventListener('keydown', toggleAutoAnswer);
 
-if (curPage == 'gold' && chestESP) {
-    try {
-        if (reactHandler().stateNode.state.stage == 'prize') {
-            let { choices } = reactHandler().stateNode.state;
-            let div = document.querySelector("div[class*='regularBody']").children[1];
-
-            // Add ESP (text overlays)
-            if (div && !document.querySelectorAll(".chest-esp").length) {
-                choices.forEach((box, i) => {
-                    let textElement = document.createElement('p');
-                    textElement.className = "chest-esp";
-                    textElement.innerText = box.text;
-                    textElement.style = `
-                        text-align: center;
-                        font-size: 30px;
-                        color: white;
-                        font-family: Titan One, sans-serif;
-                        border-color: black;
-                        margin-top: 200px;
-                    `;
-                    try {
-                        div.children[i].appendChild(textElement);
-                    } catch (e) { console.log(e) }
-                });
-            } else {
-                choices.forEach((box, i) => {
-                    if (div.children.length == 3 && div.children[i].children[1].innerText != box.text) {
-                        div.children[i].children[1].innerText = box.text;
-                    }
-                });
-            }
-
-            // 🔥 Auto-pick best reward
-            let pickIndex = choices.findIndex(c => c.text.toLowerCase().includes("triple gold"));
-            if (pickIndex === -1) pickIndex = choices.findIndex(c => c.text.toLowerCase().includes("double gold"));
-            if (pickIndex === -1) pickIndex = choices.findIndex(c => c.text.toLowerCase().includes("gold"));
-            if (pickIndex !== -1) {
-                div.children[pickIndex].click();
-            }
-        }
-    } catch (e) {
-        console.log("Gold chest auto-pick error:", e);
-    }
-}
 function shutdownMenu(e) {
     if (e.code === 'KeyP') {
         GUI.remove();
@@ -735,5 +703,13 @@ function shutdownMenu(e) {
         removeEventListener('keydown', shutdownMenu);
     }
 }
+
+function toggleHighlight(e) {
+    if (e.code === 'KeyH') {
+        highlightAnswers = !highlightAnswers;
+    }
+}
+
+addEventListener('keydown', toggleHighlight);
 addEventListener('keydown', shutdownMenu);
 })()
