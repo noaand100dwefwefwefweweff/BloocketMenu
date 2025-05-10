@@ -1,5 +1,5 @@
 # BloocketMenu
-Blooket hacks for cool people
+Blooket hacks
 
 To use!
 
