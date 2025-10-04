@@ -16,6 +16,3 @@ P = Panic button, This will completely shut down the cheat and make it unusable 
 H = shortcut for highlight command.
 
 More commands coming!
-
-
-Add my discord #pepsi.warrior or join my discord server https://discord.gg/UhxUPDpVqT for any help or suggestions!
